@@ -31,8 +31,8 @@ public class TestUtil {
     public TestUtil() throws Exception {
         instance = new SimpleCRCatalogue();
     }
-    
-    public void initTestDB() throws Exception{
+
+    public void initTestDB() throws Exception {
         initTestEnties();
         instance.registerResourceEntrys(topEntries);
     }
@@ -140,9 +140,10 @@ public class TestUtil {
     public void deleteDB() throws URISyntaxException {
         File db = new File(new URI(Config.DB_LOC_URI));
         File[] entries = db.listFiles();
-        for (File f : entries) {
-            f.delete();
+        if (entries != null && entries.length >= 1) {
+            for (File f : entries) {
+                f.delete();
+            }
         }
-
     }
 }

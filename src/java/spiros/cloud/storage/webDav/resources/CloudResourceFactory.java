@@ -2,7 +2,6 @@ package spiros.cloud.storage.webDav.resources;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +40,9 @@ public class CloudResourceFactory implements ResourceFactory {
         } else {
             try {
                 return getResource(path1);
-            } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
+                log.error(ex.getMessage());
+//                java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return null;
@@ -63,16 +59,13 @@ public class CloudResourceFactory implements ResourceFactory {
 
         ResourceEntry entry = (ResourceEntry) catalogue.getResourceEntryByLRN(path.toString());
         if (entry instanceof ResourceFolderEntry) {
-            List<ResourceEntry> children = ((ResourceFolderEntry) entry).getChildren();
-            for (ResourceEntry e : children) {
-                debug("Children: " + e.getLRN());
-            }
+//            List<ResourceEntry> children = ((ResourceFolderEntry) entry).getChildren();
             return new CloudDirResource(catalogue, entry);
         }
         if (entry instanceof ResourceFileEntry) {
             return new CloudFileResource(catalogue, entry);
         }
-        
+        debug("Unknown Type: "+entry.getLRN());
         return new CloudResource(catalogue, entry);
     }
 

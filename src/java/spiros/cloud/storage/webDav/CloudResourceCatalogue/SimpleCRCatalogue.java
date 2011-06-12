@@ -19,6 +19,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import spiros.cloud.storage.webDav.VCResources.IResourceEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceFolderEntry;
@@ -50,7 +52,26 @@ public class SimpleCRCatalogue implements ICRCatalogue {
     @Override
     public void registerResourceEntry(IResourceEntry entry)
             throws URISyntaxException, IOException {
-        saveEntry(entry);
+        ResourceFolderEntry parentEntry = null;
+        String parentLRN;
+        try {
+            if (!entry.isRoot() && entry.isTopLevel()) {
+                saveEntry(entry);
+            } else if (!entry.isRoot() && !entry.isTopLevel()) {
+                parentLRN = getParentLRN(entry);
+                parentEntry = (ResourceFolderEntry) getResourceEntryByLRN(parentLRN);
+                if (resourceEntryExists(entry)) {
+                    parentEntry.addChild((ResourceEntry) entry);
+                } else {
+                    parentEntry = new ResourceFolderEntry(parentLRN);
+                    parentEntry.addChild((ResourceEntry) entry);
+                }
+                registerResourceEntry(parentEntry);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(SimpleCRCatalogue.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void saveEntry(IResourceEntry entry) throws URISyntaxException,
@@ -79,7 +100,7 @@ public class SimpleCRCatalogue implements ICRCatalogue {
 
         for (int i = 0; i < data.length; i++) {
             ResourceEntry e = loadNodeEntry(data[i]);
-            if (e.getLRN().equals(logicalResourceName)) {
+            if (e != null && e.getLRN().equals(logicalResourceName)) {
                 return e;
             }
         }
@@ -176,9 +197,13 @@ public class SimpleCRCatalogue implements ICRCatalogue {
 
     private ResourceEntry loadNodeEntry(String fName) throws IOException,
             ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(fName);
-        ObjectInputStream in = new ObjectInputStream(fis);
-        return (ResourceEntry) in.readObject();
+        File f = new File(fName);
+        if (!f.getName().startsWith(".")) {
+            FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream in = new ObjectInputStream(fis);
+            return (ResourceEntry) in.readObject();
+        }
+        return null;
     }
 
     private ResourceEntry loadNodeEntry(File file) throws IOException,
@@ -218,10 +243,13 @@ public class SimpleCRCatalogue implements ICRCatalogue {
         ArrayList<ResourceEntry> topLevelEntries = new ArrayList<ResourceEntry>();
         for (int i = 0; i < data.length; i++) {
             entry = loadNodeEntry(data[i]);
-            String[] parts = entry.getLRN().split("/");
-            if (parts.length == 2) {
-                topLevelEntries.add(entry);
+            if (entry != null) {
+                String[] parts = entry.getLRN().split("/");
+                if (parts.length == 2) {
+                    topLevelEntries.add(entry);
+                }
             }
+
         }
         return topLevelEntries;
     }
@@ -255,5 +283,27 @@ public class SimpleCRCatalogue implements ICRCatalogue {
             }
         }
         return false;
+    }
+
+    private IResourceEntry getParent(IResourceEntry entry) throws IOException, ClassNotFoundException {
+        String parentLRN = getParentLRN(entry);
+        IResourceEntry parentEntry = null;
+        if (parentLRN != null) {
+            parentEntry = getResourceEntryByLRN(parentLRN);
+        }
+        return parentEntry;
+    }
+
+    private String getParentLRN(IResourceEntry entry) {
+        String[] parts = entry.getLRN().split("/");
+//        debug("LRN: " + entry.getLRN());
+        String parentLRN = null;
+        if (parts != null && parts.length >= 1) {
+            String childName = parts[parts.length - 1];
+//            debug("childName: " + childName);
+            parentLRN = entry.getLRN().substring(0, (entry.getLRN().length() - childName.length()));
+//            debug("parentLRN: " + parentLRN);
+        }
+        return parentLRN;
     }
 }
