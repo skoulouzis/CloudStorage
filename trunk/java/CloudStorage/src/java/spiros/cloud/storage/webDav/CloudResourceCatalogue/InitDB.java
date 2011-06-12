@@ -4,6 +4,8 @@
  */
 package spiros.cloud.storage.webDav.CloudResourceCatalogue;
 
+import nl.uva.vlet.vrs.VRS;
+
 /**
  *
  * @author alogo
@@ -15,5 +17,9 @@ public class InitDB {
      */
     public static void main(String[] args) throws Exception {
        Util.initTestCatalouge();
+       
+       VRS.exit();
+       
+       System.exit(0);
     }
 }

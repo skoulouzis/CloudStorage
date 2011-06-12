@@ -102,4 +102,21 @@ public class ResourceEntry implements IResourceEntry, Serializable {
 
         }
     }
+
+    @Override
+    public Boolean isRoot() {
+        if (getLRN().equals("/")) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isTopLevel() {
+        String[] parts = getLRN().split("/");
+        if(parts.length<=2){
+            return true;
+        }
+        return false;
+    }
 }

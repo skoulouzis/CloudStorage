@@ -4,7 +4,6 @@
  */
 package spiros.cloud.storage.webDav.CloudResourceCatalogue;
 
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,6 +14,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import spiros.cloud.storage.webDav.VCResources.IResourceEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceEntry;
+import spiros.cloud.storage.webDav.VCResources.ResourceFileEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceFolderEntry;
 import spiros.cloud.storage.webDav.test.TestUtil;
 
@@ -96,6 +96,27 @@ public class SimpleCRCatalogueTest extends TestCase {
         instance.registerResourceEntry(newDir);
 
         IResourceEntry loaded = instance.getResourceEntryByLRN(newDir.getLRN());
+        Boolean theSame = SimpleCRCatalogue.compareEntries(newDir, loaded);
+        assertTrue(theSame);
+
+        loaded = instance.getResourceEntryByUID(newDir.getUID());
+        theSame = SimpleCRCatalogue.compareEntries(newDir, loaded);
+        assertTrue(theSame);
+    }
+    
+       /**
+     * Test of registerResourceEntry method, of class SimpleCRCatalogue.
+     */
+    public void testRegisterChildEntry() throws Exception {
+        System.out.println("testRegisterChildsEntry");
+        SimpleCRCatalogue instance = new SimpleCRCatalogue();
+        String lrn = "/dir1/dir2/file";
+        ResourceEntry newDir = new ResourceFileEntry(lrn);
+        assertEquals(lrn, newDir.getLRN());
+        instance.registerResourceEntry(newDir);
+        
+        IResourceEntry loaded = instance.getResourceEntryByLRN(newDir.getLRN());
+        
         Boolean theSame = SimpleCRCatalogue.compareEntries(newDir, loaded);
         assertTrue(theSame);
 
@@ -303,4 +324,9 @@ public class SimpleCRCatalogueTest extends TestCase {
         assertTrue(matsch);
 
     }
+
+    private void debug(String msg) {
+        System.err.println(this.getName()+": "+msg);
+    }
+    
 }

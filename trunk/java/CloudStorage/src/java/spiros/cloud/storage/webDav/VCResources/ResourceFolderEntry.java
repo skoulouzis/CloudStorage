@@ -74,11 +74,13 @@ public class ResourceFolderEntry extends ResourceEntry {
     private String resolveChildName(String lrn) throws Exception {
         String theChildName;
         String parentLRN;
+        String tmp;
 
         if (lrn.contains("/")) {
             String[] parts = lrn.split("/");
             if (parts != null && parts.length >= 1) {
                 theChildName = parts[parts.length - 1];
+                
 
                 int endIndex = (lrn.length() - theChildName.length());
                 parentLRN = lrn.substring(0, endIndex - 1);
@@ -89,6 +91,10 @@ public class ResourceFolderEntry extends ResourceEntry {
                 if (parentLRN.endsWith("/") && parentLRN.length() > 1) {
                     parentLRN = parentLRN.substring(parentLRN.length() - 2,
                             parentLRN.length() - 1);
+                }
+                if(!parentLRN.startsWith("/")){
+                    tmp ="/"+parentLRN;
+                    parentLRN = tmp;
                 }
                 if (!parentLRN.equals(this.getLRN())) {
                     throw new Exception(
