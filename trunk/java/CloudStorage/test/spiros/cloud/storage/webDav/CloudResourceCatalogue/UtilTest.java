@@ -81,28 +81,27 @@ public class UtilTest extends TestCase {
     }
     
 
-    public void testInitTestCatalouge() throws Exception {
-        System.out.println("initTestCatalouge");
-
-        deleteAllDBFiles();
-
-        Util.initTestCatalouge();
-        File f = new File(new URI(Config.DB_LOC_URI));
-        assertTrue(f.exists());
-        fileCount = 0;
-        listAllNodes(f);
-        int dbFiles = fileCount;
-
-        fileCount = 0;
-        for (String s : Config.CLOUD_LOCATIONS_URI) {
-            f = new File(new URI(s));
-            assertTrue(f.exists());
-
-            listAllNodes(f);
-        }
-        int files = fileCount;
-        assertEquals(files, dbFiles);
-    }
+//    public void testInitTestCatalouge() throws Exception {
+//        System.out.println("initTestCatalouge");
+//
+//        deleteAllDBFiles();
+//
+//        Util.initTestCatalouge();
+//        File f = new File(new URI(Config.DB_LOC_URI));
+//        assertTrue(f.exists());
+//        fileCount = 0;
+//        listAllNodes(f);
+//        int dbFiles = fileCount;
+//
+//        fileCount = 0;
+//        for (String s : Config.CLOUD_LOCATIONS_URI) {
+//            f = new File(new URI(s));
+//            assertTrue(f.exists());
+//            listAllNodes(f);
+//        }
+//        int files = fileCount;
+//        assertEquals(files, dbFiles);
+//    }
 
     private void deleteAllDBFiles() throws URISyntaxException {
         File f = new File(new URI(Config.DB_LOC_URI));

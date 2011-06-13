@@ -19,7 +19,5 @@ public class InitDB {
        Util.initTestCatalouge();
        
        VRS.exit();
-       
-       System.exit(0);
     }
 }

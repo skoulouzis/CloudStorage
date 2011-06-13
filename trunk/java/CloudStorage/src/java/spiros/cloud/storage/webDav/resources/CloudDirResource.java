@@ -33,7 +33,6 @@ public class CloudDirResource extends CloudResource implements
 
     public CloudDirResource(ICRCatalogue catalogue, IResourceEntry entry) {
         super(catalogue, entry);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -58,10 +57,10 @@ public class CloudDirResource extends CloudResource implements
     public List<? extends Resource> getChildren() {
         List<ResourceEntry> children = ((ResourceFolderEntry) getNodeEntry()).getChildren();
         List<Resource> list = new ArrayList<Resource>();
-        debug("Children len "+list.size());
+        debug("Children len "+children.size());
         for (ResourceEntry r : children) {
-            if(r == null){
-                debug("Child "+r.getLRN()+" is null!!");
+            if(r.getMetadata() == null){
+                debug("Child "+r.getLRN()+" has no metadata ");
             }
             if (r instanceof ResourceFileEntry) {
                 list.add(new CloudFileResource(getCatalogue(), r));

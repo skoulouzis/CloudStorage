@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import nl.uva.vlet.exception.VlException;
 import spiros.cloud.storage.webDav.CloudResourceCatalogue.ICRCatalogue;
 import spiros.cloud.storage.webDav.CloudResourceCatalogue.SimpleCRCatalogue;
+import spiros.cloud.storage.webDav.VCResources.Metadata;
 import spiros.cloud.storage.webDav.VCResources.ResourceEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceFileEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceFolderEntry;
@@ -41,7 +42,7 @@ public class CloudResourceFactory implements ResourceFactory {
             try {
                 return getResource(path1);
             } catch (Exception ex) {
-                log.error(ex.getMessage());
+                ex.printStackTrace();
 //                java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -58,6 +59,7 @@ public class CloudResourceFactory implements ResourceFactory {
             Exception {
 
         ResourceEntry entry = (ResourceEntry) catalogue.getResourceEntryByLRN(path.toString());
+        
         if (entry instanceof ResourceFolderEntry) {
 //            List<ResourceEntry> children = ((ResourceFolderEntry) entry).getChildren();
             return new CloudDirResource(catalogue, entry);

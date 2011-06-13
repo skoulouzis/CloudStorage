@@ -28,7 +28,6 @@ public class CloudFileResource extends CloudResource implements
 
     public CloudFileResource(ICRCatalogue catalogue, IResourceEntry entry) {
         super(catalogue, entry);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -64,6 +63,8 @@ public class CloudFileResource extends CloudResource implements
             if (accepts != null && !accepts.equals("")) {
                 type = ContentTypeUtils.findAcceptableContentType(mime, accepts);
             }
+        }else{
+            debug("Metadata is NULL!!!");
         }
 
         debug("getContentType: type: " + type);
@@ -72,7 +73,7 @@ public class CloudFileResource extends CloudResource implements
     }
 
     private void debug(String msg) {
-        System.err.println(this.getClass().getSimpleName() + ": " + msg);
+        System.err.println(this.getClass().getSimpleName() + "."+this.getName()+": "+ msg);
     }
 
     @Override

@@ -18,8 +18,10 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlURISyntaxException;
 import nl.uva.vlet.vrs.VComposite;
 import nl.uva.vlet.vrs.VNode;
+import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSClient;
 import spiros.cloud.storage.webDav.VCResources.AccessLocation;
+import spiros.cloud.storage.webDav.VCResources.IResourceEntry;
 import spiros.cloud.storage.webDav.VCResources.Metadata;
 import spiros.cloud.storage.webDav.VCResources.ResourceEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceFileEntry;
@@ -29,6 +31,8 @@ public class Util {
 
     private static SimpleCRCatalogue cat;
     private static VRSClient c;
+    private static List<ResourceEntry> allEntries = new ArrayList<ResourceEntry>();
+    private static int fileCount = 0;
 
     public void setVRSClient(VRSClient client) {
         c = client;
@@ -36,7 +40,7 @@ public class Util {
 
     public static void initTestCatalouge() throws Exception {
         if (c == null) {
-            c = new VRSClient();
+            c = new VRSClient(VRS.getDefaultVRSContext());
         }
 
         for (int i = 0; i < Config.CLOUD_LOCATIONS_URI.length; i++) {
@@ -46,6 +50,16 @@ public class Util {
                 addAllNodes2DB(Config.CLOUD_LOCATIONS_URI[i], n);
             }
         }
+        
+        for(ResourceEntry r: allEntries){
+            if(r.getMetadata()==null){
+                throw new RuntimeException(r.getLRN()+" has null meta data!");
+            }
+        }
+        IResourceEntry entry = cat.getResourceEntryByLRN("/Dir1/");
+        debug("ResourceEntry: "+entry.getLRN()+" type: "+entry.getMetadata().getMimeType());
+        //        Thread.sleep(50);
+        
     }
 
     private static void addAllNodes2DB(String cloudLocationsUri, VNode vnode)
@@ -56,7 +70,7 @@ public class Util {
         ResourceEntry entry = null;
         if (!vnode.getName().startsWith(".")) {
             if (vnode.isComposite()) {
-                debug("Composite " + lrn);
+//                debug("Composite " + lrn);
                 entry = new ResourceFolderEntry(lrn);
                 VNode[] nodes = ((VComposite) vnode).getNodes();
 
@@ -66,11 +80,11 @@ public class Util {
 
                 for (VNode n : nodes) {
                     String childLRN = getLogicalName(cloudLocationsUri, n.getVRL().toURIString());
-                    debug("\t Children: " + childLRN);
+//                    debug("\t Children: " + childLRN);
                     addAllNodes2DB(cloudLocationsUri, n);
                 }
             } else {
-                debug("Files " + lrn);
+//                debug("Files " + lrn);
                 entry = new ResourceFileEntry(lrn);
                 List<AccessLocation> access = getAccessLocation(vnode);
                 ((ResourceFileEntry) entry).addAccessLocations(access);
@@ -83,7 +97,10 @@ public class Util {
             cat = new SimpleCRCatalogue();
         }
         if (entry != null) {
+            fileCount++;
+            debug("Register: "+entry.getLRN()+" count: "+fileCount);
             cat.registerResourceEntry(entry);
+            allEntries.add(entry);
         }
     }
 
@@ -125,9 +142,10 @@ public class Util {
     //
     // }
     private static Metadata getNodeMetadata(VNode vnode) throws VlException {
+        debug("Reource: "+vnode.getVRL());
+        debug("\tMimetype: "+vnode.getMimeType());
         Metadata m = new Metadata();
         String[] aNames = vnode.getAttributeNames();
-
         VAttribute modificationTime = vnode.getAttribute("modificationTime");
         m.setModifiedDate(modificationTime.getLongValue());
 
@@ -141,6 +159,7 @@ public class Util {
             }
             if (name.toLowerCase().contains("mimetype")) {
                 mimeType = vnode.getAttribute(name);
+//                debug("\tMimetype Attributs: "+mimeType.getStringValue());
             }
         }
         if (createDate == null) {
@@ -158,7 +177,6 @@ public class Util {
             strMime = mimeType.getStringValue();
         }
         m.setMimeType(strMime);
-
         m.setLength(vnode.getAttribute("length").getLongValue());
 
         return m;
