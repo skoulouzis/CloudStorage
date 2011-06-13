@@ -322,7 +322,6 @@ public class SimpleCRCatalogueTest extends TestCase {
 
         boolean matsch = u.compareResourceEntryList(u.getAllEntries(), loadedAll);
         assertTrue(matsch);
-
     }
 
     private void debug(String msg) {

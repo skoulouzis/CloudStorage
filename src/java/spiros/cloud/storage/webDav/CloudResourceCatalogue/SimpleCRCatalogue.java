@@ -28,6 +28,7 @@ import spiros.cloud.storage.webDav.VCResources.ResourceFolderEntry;
 public class SimpleCRCatalogue implements ICRCatalogue {
 
     private File db;
+    private static boolean debug = false;
 
     //
     public SimpleCRCatalogue() throws MalformedURLException, URISyntaxException {
@@ -46,7 +47,9 @@ public class SimpleCRCatalogue implements ICRCatalogue {
     }
 
     private void debug(String msg) {
-        System.err.println(this.getClass().getSimpleName() + ": " + msg);
+        if(debug){
+         System.err.println(this.getClass().getSimpleName() + ": " + msg);   
+        }
     }
 
     @Override
@@ -97,7 +100,6 @@ public class SimpleCRCatalogue implements ICRCatalogue {
             throws IOException, ClassNotFoundException {
 
         File[] data = db.listFiles();
-
         for (int i = 0; i < data.length; i++) {
             ResourceEntry e = loadNodeEntry(data[i]);
             if (e != null && e.getLRN().equals(logicalResourceName)) {
@@ -107,11 +109,11 @@ public class SimpleCRCatalogue implements ICRCatalogue {
 
         List<ResourceEntry> all = loadAllEntries();
         for (ResourceEntry e : all) {
+            debug("Looking " + e.getLRN());
             if (e.getLRN().equals(logicalResourceName)) {
                 return e;
             }
         }
-
         return null;
     }
 
@@ -171,7 +173,7 @@ public class SimpleCRCatalogue implements ICRCatalogue {
         if (entries == null) {
             entries = new ArrayList<ResourceEntry>();
         }
-        if (!entries.contains(loadedEntry)) {
+        if (!entries.contains(loadedEntry) && loadedEntry != null) {
             entries.add(loadedEntry);
         }
 

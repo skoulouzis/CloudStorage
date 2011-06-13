@@ -4,22 +4,31 @@
  */
 package spiros.cloud.storage.webDav.resources;
 
-import com.bradmcevoy.http.Auth;
-import com.bradmcevoy.http.Request;
-import com.bradmcevoy.http.Request.Method;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Date;
 import junit.framework.TestCase;
 import spiros.cloud.storage.webDav.CloudResourceCatalogue.ICRCatalogue;
+import spiros.cloud.storage.webDav.CloudResourceCatalogue.SimpleCRCatalogue;
 import spiros.cloud.storage.webDav.VCResources.IResourceEntry;
+import spiros.cloud.storage.webDav.VCResources.Metadata;
+import spiros.cloud.storage.webDav.VCResources.ResourceEntry;
 
 /**
  *
  * @author alogo
  */
 public class CloudResourceTest extends TestCase {
+    protected final SimpleCRCatalogue catalogue;
+    protected final ResourceEntry entry;
     
-    public CloudResourceTest(String testName) {
+    public CloudResourceTest(String testName) throws MalformedURLException, URISyntaxException, IOException {
         super(testName);
+//        u = new TestUtil();
+        catalogue = new SimpleCRCatalogue();
+        entry = new ResourceEntry("resource1");
+        entry.setMetadata(new Metadata());
     }
     
     @Override
@@ -35,59 +44,63 @@ public class CloudResourceTest extends TestCase {
     /**
      * Test of authenticate method, of class CloudResource.
      */
-    public void testAuthenticate() {
-        System.out.println("authenticate");
-        String user = "";
-        String pwd = "";
-        CloudResource instance = null;
-        Object expResult = null;
-        Object result = instance.authenticate(user, pwd);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    public void testAuthenticate() {
+//        System.out.println("authenticate");
+//        String user = "";
+//        String pwd = "";
+//        CloudResource instance = null;
+//        Object expResult = null;
+//        Object result = instance.authenticate(user, pwd);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
-    /**
-     * Test of authorise method, of class CloudResource.
-     */
-    public void testAuthorise() {
-        System.out.println("authorise");
-        Request arg0 = null;
-        Method arg1 = null;
-        Auth arg2 = null;
-        CloudResource instance = null;
-        boolean expResult = false;
-        boolean result = instance.authorise(arg0, arg1, arg2);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    /**
+//     * Test of authorise method, of class CloudResource.
+//     */
+//    public void testAuthorise() {
+//        System.out.println("authorise");
+//        Request arg0 = null;
+//        Method arg1 = null;
+//        Auth arg2 = null;
+//        CloudResource instance = null;
+//        boolean expResult = false;
+//        boolean result = instance.authorise(arg0, arg1, arg2);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
-    /**
-     * Test of checkRedirect method, of class CloudResource.
-     */
-    public void testCheckRedirect() {
-        System.out.println("checkRedirect");
-        Request arg0 = null;
-        CloudResource instance = null;
-        String expResult = "";
-        String result = instance.checkRedirect(arg0);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    /**
+//     * Test of checkRedirect method, of class CloudResource.
+//     */
+//    public void testCheckRedirect() {
+//        System.out.println("checkRedirect");
+//        Request arg0 = null;
+//        CloudResource instance = null;
+//        String expResult = "";
+//        String result = instance.checkRedirect(arg0);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of getModifiedDate method, of class CloudResource.
      */
-    public void testGetModifiedDate() {
+    public void testGetModifiedDate() throws IOException {
         System.out.println("getModifiedDate");
-        CloudResource instance = null;
-        Date expResult = null;
+        
+        long now = System.currentTimeMillis();
+        Metadata meta = new Metadata();
+        meta.setModifiedDate(now);
+        entry.setMetadata(meta);
+        
+        CloudResource instance = new CloudDirResource(catalogue, entry);
+        Date expResult = new Date(now);
         Date result = instance.getModifiedDate();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -95,38 +108,34 @@ public class CloudResourceTest extends TestCase {
      */
     public void testGetName() {
         System.out.println("getName");
-        CloudResource instance = null;
-        String expResult = "";
+        CloudResource instance = new CloudDirResource(catalogue, entry);
+        String expResult = entry.getLRN();
         String result = instance.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getRealm method, of class CloudResource.
-     */
-    public void testGetRealm() {
-        System.out.println("getRealm");
-        CloudResource instance = null;
-        String expResult = "";
-        String result = instance.getRealm();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    /**
+//     * Test of getRealm method, of class CloudResource.
+//     */
+//    public void testGetRealm() {
+//        System.out.println("getRealm");
+//        CloudResource instance = null;
+//        String expResult = "";
+//        String result = instance.getRealm();
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of getUniqueId method, of class CloudResource.
      */
     public void testGetUniqueId() {
         System.out.println("getUniqueId");
-        CloudResource instance = null;
-        String expResult = "";
+        CloudResource instance = new CloudDirResource(catalogue, entry);
+        String expResult = entry.getUID();
         String result = instance.getUniqueId();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -134,24 +143,28 @@ public class CloudResourceTest extends TestCase {
      */
     public void testGetCreateDate() {
         System.out.println("getCreateDate");
-        CloudResource instance = null;
-        Date expResult = null;
+        long now = System.currentTimeMillis();
+        Metadata meta = new Metadata();
+        meta.setCreateDate(now);
+        entry.setMetadata(meta);
+        CloudResource instance = new CloudDirResource(catalogue, entry);
+        
+        
+        Date expResult = new Date(now);
         Date result = instance.getCreateDate();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
      * Test of setNodeEntry method, of class CloudResource.
      */
-    public void testSetNodeEntry() {
+    public void testSetNodeEntry() throws IOException {
         System.out.println("setNodeEntry");
-        IResourceEntry nodeEntry = null;
-        CloudResource instance = null;
+        IResourceEntry nodeEntry = new ResourceEntry("resource2");
+        CloudResource instance = new CloudDirResource(catalogue, entry);
         instance.setNodeEntry(nodeEntry);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        IResourceEntry loaded = instance.getNodeEntry();
+        assertEquals(loaded, nodeEntry);
     }
 
     /**
@@ -159,36 +172,20 @@ public class CloudResourceTest extends TestCase {
      */
     public void testGetNodeEntry() {
         System.out.println("getNodeEntry");
-        CloudResource instance = null;
-        IResourceEntry expResult = null;
+        CloudResource instance = new CloudDirResource(catalogue, entry);
         IResourceEntry result = instance.getNodeEntry();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(entry, result);
+        
     }
 
     /**
      * Test of setCatalogue method, of class CloudResource.
      */
-    public void testSetCatalogue() {
+    public void testSetCatalogue() throws MalformedURLException, URISyntaxException {
         System.out.println("setCatalogue");
-        ICRCatalogue catalogue = null;
-        CloudResource instance = null;
-        instance.setCatalogue(catalogue);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCatalogue method, of class CloudResource.
-     */
-    public void testGetCatalogue() {
-        System.out.println("getCatalogue");
-        CloudResource instance = null;
-        ICRCatalogue expResult = null;
-        ICRCatalogue result = instance.getCatalogue();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ICRCatalogue catalogue1 = new SimpleCRCatalogue();
+        CloudResource instance = new CloudDirResource(catalogue, entry);
+        instance.setCatalogue(catalogue1);
+        assertEquals(catalogue1, instance.getCatalogue());
     }
 }

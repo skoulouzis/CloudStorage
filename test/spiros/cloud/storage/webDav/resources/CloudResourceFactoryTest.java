@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 import nl.uva.vlet.exception.VlException;
 import spiros.cloud.storage.webDav.CloudResourceCatalogue.SimpleCRCatalogue;
 import spiros.cloud.storage.webDav.VCResources.IResourceEntry;
+import spiros.cloud.storage.webDav.VCResources.Metadata;
 import spiros.cloud.storage.webDav.VCResources.ResourceEntry;
 import spiros.cloud.storage.webDav.test.TestUtil;
 
@@ -55,6 +56,7 @@ public class CloudResourceFactoryTest extends TestCase {
         
         CloudResourceFactory instance = new CloudResourceFactory();
         IResourceEntry entry = catalogue.getResourceEntryByLRN(lrn);
+        entry.setMetadata(new Metadata());
         assertNotNull(entry);
         
         Resource expResult = new CloudResource(catalogue, entry);
@@ -73,10 +75,15 @@ public class CloudResourceFactoryTest extends TestCase {
         List<ResourceEntry> entryResources = u.getTopEntries();
         List<Resource> expResult = new ArrayList<Resource>();
         for(ResourceEntry r:entryResources){
+            r.setMetadata(new Metadata());
             expResult.add(new CloudResource(catalogue, r));
         }
         
         List<Resource> result = (List<Resource>) instance.listRootResources();
+        
+        for(Resource r: result){
+            ((CloudResource)r).getNodeEntry().setMetadata(new Metadata());
+        }
        compareResources(expResult, result);
     }
 

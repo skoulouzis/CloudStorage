@@ -21,23 +21,26 @@ public class CloudResource implements PropFindableResource {
     public CloudResource(ICRCatalogue catalogue, IResourceEntry entry) {
         this.setNodeEntry(entry);
         this.setCatalogue(catalogue);
+        if (entry.getMetadata() == null) {
+            throw new RuntimeException(entry.getLRN() + " has no metadata!");
+        }
     }
 
     @Override
     public Object authenticate(String user, String pwd) {
-        debug("User: "+user+" Password: "+pwd);
+        debug("User: " + user + " Password: " + pwd);
         return user;
     }
 
     @Override
     public boolean authorise(Request arg0, Method arg1, Auth arg2) {
-        debug("Request: "+arg0+" Method: "+arg1+" Auth: "+arg2);
+        debug("Request: " + arg0 + " Method: " + arg1 + " Auth: " + arg2);
         return true;
     }
 
     @Override
     public String checkRedirect(Request arg0) {
-        debug("Request: "+arg0);
+        debug("Request: " + arg0);
         return null;
     }
 
