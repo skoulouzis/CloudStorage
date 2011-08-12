@@ -28,7 +28,7 @@ import spiros.cloud.storage.webDav.VCResources.ResourceFolderEntry;
 public class SimpleCRCatalogue implements ICRCatalogue {
 
     private File db;
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     //
     public SimpleCRCatalogue() throws MalformedURLException, URISyntaxException {
@@ -47,8 +47,8 @@ public class SimpleCRCatalogue implements ICRCatalogue {
     }
 
     private void debug(String msg) {
-        if(debug){
-         System.err.println(this.getClass().getSimpleName() + ": " + msg);   
+        if (debug) {
+            System.err.println(this.getClass().getSimpleName() + ": " + msg);
         }
     }
 
@@ -97,7 +97,11 @@ public class SimpleCRCatalogue implements ICRCatalogue {
 
     @Override
     public IResourceEntry getResourceEntryByLRN(String logicalResourceName)
-            throws IOException, ClassNotFoundException {
+            throws IOException, ClassNotFoundException, Exception {
+
+        if (logicalResourceName.equals("") || logicalResourceName.equals("/")) {
+            return getRoot();
+        }
 
         File[] data = db.listFiles();
         for (int i = 0; i < data.length; i++) {
@@ -287,7 +291,7 @@ public class SimpleCRCatalogue implements ICRCatalogue {
         return false;
     }
 
-    private IResourceEntry getParent(IResourceEntry entry) throws IOException, ClassNotFoundException {
+    private IResourceEntry getParent(IResourceEntry entry) throws IOException, ClassNotFoundException, Exception {
         String parentLRN = getParentLRN(entry);
         IResourceEntry parentEntry = null;
         if (parentLRN != null) {

@@ -7,7 +7,6 @@ package spiros.cloud.storage.webDav;
 import com.bradmcevoy.http.ApplicationConfig;
 import com.bradmcevoy.http.AuthenticationService;
 import com.bradmcevoy.http.ResourceFactory;
-import com.bradmcevoy.http.http11.auth.BasicAuthHandler;
 import com.bradmcevoy.http.webdav.WebDavResponseHandler;
 
 import java.io.IOException;

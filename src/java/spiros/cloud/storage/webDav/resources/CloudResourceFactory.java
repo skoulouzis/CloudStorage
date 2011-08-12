@@ -2,6 +2,7 @@ package spiros.cloud.storage.webDav.resources;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,19 +33,29 @@ public class CloudResourceFactory implements ResourceFactory {
 
     @Override
     public Resource getResource(String host, String p) {
-
-        Path path1 = Path.path(p).getStripFirst();
-        debug("getResource: to Path" + path1);
-        
-        if (path1.isRoot() || path1.toString().equals("")) {
-            return new TopLevelCloudStorageResource(this);
-        } else {
-            try {
-                return getResource(path1);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-//                java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            Path path1 = Path.path(p).getStripFirst();
+            debug("getResource: to Path" + path1);
+            
+    //        if (path1.isRoot() || path1.toString().equals("")) {
+    //            
+    //            return new TopLevelCloudStorageResource(this);
+    //        } else {
+    //            try {
+    //                
+    //            } catch (Exception ex) {
+    //                ex.printStackTrace();
+    ////                java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
+    //            }
+    //        }
+            
+            return getResource(path1);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(CloudResourceFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -59,6 +70,9 @@ public class CloudResourceFactory implements ResourceFactory {
             Exception {
 
         ResourceEntry entry = (ResourceEntry) catalogue.getResourceEntryByLRN(path.toString());
+        if(entry == null){
+            throw new NullPointerException("Path "+path+" doesn't exist");
+        }
         
         if (entry instanceof ResourceFolderEntry) {
 //            List<ResourceEntry> children = ((ResourceFolderEntry) entry).getChildren();
