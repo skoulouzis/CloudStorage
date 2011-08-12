@@ -4,7 +4,6 @@
  */
 package spiros.cloud.storage.webDav.CloudResourceCatalogue;
 
-import java.util.ArrayList;
 import java.util.List;
 import spiros.cloud.storage.webDav.VCResources.IResourceEntry;
 import spiros.cloud.storage.webDav.VCResources.ResourceEntry;

@@ -1,18 +1,21 @@
 package spiros.cloud.storage.webDav.resources;
 
+import com.bradmcevoy.http.CustomProperty;
 import java.util.Date;
 
 import com.bradmcevoy.http.Auth;
+import com.bradmcevoy.http.CustomPropertyResource;
 import com.bradmcevoy.http.PropFindableResource;
 import com.bradmcevoy.http.Request;
 import com.bradmcevoy.http.Request.Method;
+import java.util.Set;
 import spiros.cloud.storage.webDav.CloudResourceCatalogue.ICRCatalogue;
 import spiros.cloud.storage.webDav.VCResources.IResourceEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CloudResource implements PropFindableResource {
+public class CloudResource implements PropFindableResource, CustomPropertyResource {
 
     private IResourceEntry nodeEntry;
     private ICRCatalogue catalogue;
@@ -22,14 +25,15 @@ public class CloudResource implements PropFindableResource {
         this.setNodeEntry(entry);
         this.setCatalogue(catalogue);
         if (entry.getMetadata() == null) {
-            throw new RuntimeException(entry.getLRN() + " has no metadata!");
+//            throw new RuntimeException(entry.getLRN() + " has no metadata!");
         }
     }
 
     @Override
     public Object authenticate(String user, String pwd) {
         debug("User: " + user + " Password: " + pwd);
-        return user;
+//        return user;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -94,5 +98,20 @@ public class CloudResource implements PropFindableResource {
 
     protected ICRCatalogue getCatalogue() {
         return catalogue;
+    }
+
+    @Override
+    public Set<String> getAllPropertyNames() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public CustomProperty getProperty(String string) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getNameSpaceURI() {
+        return "URIAAAAAAAA";
     }
 }

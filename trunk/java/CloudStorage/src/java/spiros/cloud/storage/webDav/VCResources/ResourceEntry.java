@@ -9,10 +9,10 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
- *
- * @author alogo
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 public class ResourceEntry implements IResourceEntry, Serializable {
 
     /**
@@ -22,6 +22,9 @@ public class ResourceEntry implements IResourceEntry, Serializable {
     private String UID = null;
     private String lrn;
     private Metadata metadata;
+
+    public ResourceEntry() {
+    }
 
     public ResourceEntry(String logicalResourceName) throws IOException {
         setLRN(logicalResourceName);
@@ -114,7 +117,7 @@ public class ResourceEntry implements IResourceEntry, Serializable {
     @Override
     public boolean isTopLevel() {
         String[] parts = getLRN().split("/");
-        if(parts.length<=2){
+        if (parts.length <= 2) {
             return true;
         }
         return false;

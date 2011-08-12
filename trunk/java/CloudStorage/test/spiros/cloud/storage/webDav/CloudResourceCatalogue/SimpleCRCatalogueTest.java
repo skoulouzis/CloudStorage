@@ -175,9 +175,6 @@ public class SimpleCRCatalogueTest extends TestCase {
         SimpleCRCatalogue instance = new SimpleCRCatalogue();
         List<ResourceEntry> expResult = u.getAllEntries();
         List<ResourceEntry> result = instance.loadAllEntries();
-
-
-
         testSameElements(expResult, result);
 
     }

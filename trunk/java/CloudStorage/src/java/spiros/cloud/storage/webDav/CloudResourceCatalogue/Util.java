@@ -56,9 +56,6 @@ public class Util {
                 throw new RuntimeException(r.getLRN()+" has null meta data!");
             }
         }
-        IResourceEntry entry = cat.getResourceEntryByLRN("/Dir1/");
-        debug("ResourceEntry: "+entry.getLRN()+" type: "+entry.getMetadata().getMimeType());
-        //        Thread.sleep(50);
         
     }
 
@@ -143,7 +140,7 @@ public class Util {
     // }
     private static Metadata getNodeMetadata(VNode vnode) throws VlException {
         debug("Reource: "+vnode.getVRL());
-        debug("\tMimetype: "+vnode.getMimeType());
+        
         Metadata m = new Metadata();
         String[] aNames = vnode.getAttributeNames();
         VAttribute modificationTime = vnode.getAttribute("modificationTime");
@@ -159,7 +156,7 @@ public class Util {
             }
             if (name.toLowerCase().contains("mimetype")) {
                 mimeType = vnode.getAttribute(name);
-//                debug("\tMimetype Attributs: "+mimeType.getStringValue());
+                debug("\tMimetype Attributs: "+mimeType.getStringValue());
             }
         }
         if (createDate == null) {
