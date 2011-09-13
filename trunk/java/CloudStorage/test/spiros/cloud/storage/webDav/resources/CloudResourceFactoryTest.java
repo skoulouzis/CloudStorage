@@ -48,7 +48,7 @@ public class CloudResourceFactoryTest extends TestCase {
     /**
      * Test of getResource method, of class CloudResourceFactory.
      */
-    public void testGetResource() throws URISyntaxException, VlException, IOException, ClassNotFoundException {
+    public void testGetResource() throws URISyntaxException, VlException, IOException, ClassNotFoundException, Exception {
         System.out.println("getResource");
         String host = "localhost";
         String lrn = u.getAllEntries().get(0).getLRN();
