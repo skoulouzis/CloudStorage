@@ -32,8 +32,8 @@ public class CloudResource implements PropFindableResource, CustomPropertyResour
     @Override
     public Object authenticate(String user, String pwd) {
         debug("User: " + user + " Password: " + pwd);
-//        return user;
-        throw new UnsupportedOperationException("Not supported yet.");
+        return user;
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
